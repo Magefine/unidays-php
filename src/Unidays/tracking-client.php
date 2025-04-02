@@ -2,6 +2,8 @@
 
 namespace Unidays;
 
+use GuzzleHttp\Client;
+
 /**
  * UNiDAYS SDK - Tracking Client Helper Class.
  *
@@ -34,11 +36,15 @@ class TrackingClient
     public function sendRequest()
     {
         $url = $this->tracking->create_server_url($this->key);
-        $response = \Httpful\Request::post($url)
-                                    ->addHeader("User-Agent", "unidays-php-client-library/1.2")
-                                    ->send();
+        $client = new Client();
 
-        return $response;
+        $response = $client->post($url, [
+            'headers' => [
+                'User-Agent' => 'unidays-php-client-library/1.2'
+            ]
+        ]);
+
+        return $response->getBody()->getContents();
     }
 }
 
